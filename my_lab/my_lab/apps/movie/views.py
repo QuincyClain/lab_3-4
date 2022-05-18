@@ -4,7 +4,7 @@ from .models import Movie
 
 def index(request):
     movies = Movie.objects.all()
-    return render(request,'main/index.html', {'title': 'Movies today: ', 'list': movies})
+    return render(request, 'main/index.html', {'title': 'Movies today: ', 'list': movies})
 
 def test(request):
     return HttpResponse('Test')
