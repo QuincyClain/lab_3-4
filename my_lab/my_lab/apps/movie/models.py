@@ -114,7 +114,7 @@ class StarRate(models.Model):
 
 
 class MovieRating(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CharField, verbose_name="movie")
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="movie")
     rate = models.ForeignKey(StarRate, on_delete=models.CASCADE, verbose_name="rate")
 
     def __str__(self):
