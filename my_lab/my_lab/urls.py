@@ -19,8 +19,8 @@ from django.conf import settings
 from django.urls import path, include
 
 urlpatterns = [
-    path('movie/', include('movie.urls')),
     path('admin/', admin.site.urls),
+    path('', include('movie.urls')),
 ]
 
 if settings.DEBUG:

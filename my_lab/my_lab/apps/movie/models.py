@@ -47,7 +47,7 @@ class Movie(models.Model):
     title = models.CharField("Name", max_length=100)
     description = models.CharField("Description", max_length=300)
     imageURL = models.ImageField("Poster", upload_to="movies/")
-    date_of_realise = models.DateTimeField("realise date", default=date.today)
+    date_of_release = models.DateField("release date", default=date.today)
     producers = models.ManyToManyField(Actor, verbose_name="producer", related_name="film_director")
     actors = models.ManyToManyField(Actor, verbose_name="actor", related_name="film_actor")
     genres = models.ManyToManyField(Genre, verbose_name="Genres")
@@ -85,21 +85,6 @@ class MoviePictures(models.Model):
     class Meta:
         verbose_name = "Movie picture"
         verbose_name_plural = "Movie pictures"
-
-
-class Comment(models.Model):
-    name = models.CharField("Name", max_length=100, default="some name")
-    email = models.CharField(max_length=100, verbose_name="Email", null=True, unique=True)
-    message = models.TextField("Text", max_length=500, default="some text")
-    author = models.ForeignKey('self', verbose_name="Author", on_delete=models.SET_NULL, blank=True, null=True)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.name}: {self.message}"
-
-    class Meta:
-        verbose_name = "Comment"
-        verbose_name_plural = "Comments"
 
 
 class StarRate(models.Model):
