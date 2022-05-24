@@ -1,0 +1,21 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    <title>Success</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="mt-3">
+        {% if success %}
+        <div class="jumbotron text-center">
+            <h1 >Thank <span class="badge bg-success">You!</span></h1>
+            <p class="lead"><strong>{{ success.strong }}</strong></p>
+            <hr/>
+            <p>Having trouble? <a href="#">Contact Us</a></p>
+            <p class="lead">
+                <a class="btn btn-dark btn-sm" href="/" role="button">Continue to homepage</a>
+            </p>
+        </div>
+        {% endif %}
+    </div>
+{% endblock content %}

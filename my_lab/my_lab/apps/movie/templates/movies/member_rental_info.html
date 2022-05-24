@@ -1,0 +1,53 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    <title>Member Rental Info</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        {% if members %}
+            <h1 >Rental <span class="badge bg-dark">Info</span></h1>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <p>
+                    <label>Member Name</label>
+                </p>
+                </p>
+                    <select name="member" class="form-control">
+                        {% for member in members %}
+                            <option value="{{ member.id }}">{{ member.member_name }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+        {% endif %}
+
+        {% if data %}
+            <h1 class="mt-3">{{ data.member_name }}</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr class="bg-dark" style="color: white;">
+                        <th scope="col">Movie Name</th>
+                        <th scope="col">Movie Genre</th>
+                        <th scope="col">Rent Date</th>
+                        <th scope="col">Return Date</th>
+                        <th scope="col">Movie Fee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rental_info in data.movierental_set.all %}
+                        <tr>
+                            <td>{{ rental_info.movie_id.title }}</td>
+                            <td>{{ rental_info.movie_id.genre }}</td>
+                            <td>{{ rental_info.rent_date }}</td>
+                            <td>{{ rental_info.return_date }}</td>
+                            <td>{{ rental_info.movie_id.price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock content %}

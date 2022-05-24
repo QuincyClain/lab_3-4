@@ -1,0 +1,18 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    <title>Rent Movie</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h1>Rent <span class="badge bg-dark">Movie</span></h1>
+        {% if rent_form %}
+            <form method="POST" action="">
+                {% csrf_token %}
+                {{ rent_form.as_p }}
+                <button type="submit" class="btn btn-dark">Rent</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock content %}

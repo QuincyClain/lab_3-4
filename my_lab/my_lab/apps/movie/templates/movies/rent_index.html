@@ -12,8 +12,7 @@
 
         {% if data %}
             {% for movies in data %}
-
-                <h5>{{ movies.title }}, {{ movies.date_of_release}}</h5>
+                <h5><img src="{{movies.imageURL.url}}" width="70px"/> {{ movies.title }}, {{ movies.date_of_release}}</h5>
 
                 <table class="table table-striped">
                     <thead>
@@ -24,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for rental_info in movies.movie_rental_set.all %}
+                        {% for rental_info in movies.movierental_set.all %}
                             <tr>
                                 <td>{{ rental_info.member_id.member_name }}</td>
                                 <td>{{ rental_info.rent_date }}</td>
