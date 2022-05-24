@@ -1,0 +1,55 @@
+{% extends "movies/base.html" %}
+{% load static %}
+<html lang="en">
+{% block title %}
+<head>
+    <meta charset="UTF-8">
+    <title>List of Movies</title>
+</head>
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+    {% for movie in movie_list %}
+        <div class="col-md-4 col-xs-6 border-primary mb-3">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-12">
+                        <div class="card-header text-white bg-danger">
+                            <p class="card-text">
+                                <h5 class="card-title">
+                                    {{movie.title}}
+                                    <a class="text-white float-right"><i class="bi bi-pencil-square"></i></a>
+                                </h5>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="{{ movie.imageURL.url }}" width="100%" alt="{{movie.title}}">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <p class="card-text"><b>Description: </b>{{movie.description}}</p>
+                            <p class="card-text"><b>Genre:</b>
+                                {% for genre in movie.genres.all %}
+                                    <b>{{movie.name}}</b>
+                                {% endfor %}
+                            </p>
+                            <p class="card=text"><b>Date of release: </b>{{movie.date_of_release}}</p>
+                            <p class="card-text ">
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-footer ">
+                            <p class="card-text">
+                                <a class="btn btn-outline-primary float-right nav-link" href="details/{{movie.id}}" aria-pressed="true"><i class="bi bi-eye-fill"></i> Show Details</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}

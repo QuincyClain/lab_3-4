@@ -1,0 +1,40 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+<head>
+    <title>Ticket solded</title>
+</head>
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h1>Movie <span class="badge bg-dark">Rental Info</span></h1>
+
+        {% if data %}
+            {% for movies in data %}
+
+                <h5>{{ movies.title }}, {{ movies.date_of_release}}</h5>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="bg-dark" style="color: white;">
+                            <th scope="col">Member Name</th>
+                            <th scope="col">Rent Date</th>
+                            <th scope="col">Return Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rental_info in movies.movie_rental_set.all %}
+                            <tr>
+                                <td>{{ rental_info.member_id.member_name }}</td>
+                                <td>{{ rental_info.rent_date }}</td>
+                                <td>{{ rental_info.return_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock content %}

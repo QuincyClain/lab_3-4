@@ -1,0 +1,40 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    <title>Members Info</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h1>Members <span class="badge bg-dark">Information</span></h1>
+
+        <a href="/member/create/" class="btn btn-secondary mb-3" style="float:right">Create New Member</a>
+
+        <table class="table table-striped">
+            <thead>
+                <tr class="bg-dark" style="color: white;">
+                    <th scope="col">Member Name</th>
+                    <th scope="col">Email Address</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if data %}
+                    {% for member in data %}
+                        <tr>
+                            <td>{{ member.member_name }}</td>
+                            <td>{{ member.email_address }}</td>
+                            <td>{{ member.age }}</td>
+                            <td>
+                                <a href="/member/update/{{member.id}}" class="btn btn-primary" role="button" aria-pressed="true">Edit</a>
+                                <a href="/member/delete/{{member.id}}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock content %}

@@ -1,0 +1,76 @@
+{% extends "movies/base.html" %}
+{% load static %}
+<html lang="en">
+{% block title %}
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Details</title>
+</head>
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="card mb-12">
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <div class="card-header text-white bg-dark">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                {% if movie %}
+                                    {{ movie.title }}
+                                {% else %}
+                                    <h1>Not Found</h1>
+                                {% endif %}
+                            </h5>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    {% if movie %}
+                    <img src="{{movie.imageURL.url}}" width="100%" alt="{{movie.title}}">
+                    {% endif %}
+                </div>
+                <div class="col-md-5">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <b>Description:</b>
+                            {% if movie %}
+                                {{movie.description}}
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <b>Genre:</b>
+                            {% if movie %}
+                                {{movie.genre}}
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <b>Release:</b>
+                            {% if movie %}
+                                {{movie.date_of_release}}
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <b>Actors: </b>
+                            <hr />
+                            <div class="row">
+                                {% for actor in movie.actors.all %}
+                                    <div class="column text-left">
+                                        <div style="margin-right: 10px">
+                                            <img class="border-info rounded-circle" src="{{ actor.imageURL.url}}" width="150px">
+                                        </div>
+                                        <br />
+                                        <p class="card-text" style="margin-left:20px">{{actor.name}}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
