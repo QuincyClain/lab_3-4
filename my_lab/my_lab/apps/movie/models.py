@@ -17,18 +17,6 @@ class Category(models.Model):
         verbose_name_plural = "Category"
 
 
-class Genre(models.Model):
-    name = models.CharField("Name", max_length=100)
-    url = models.SlugField(max_length=150, unique=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Genre"
-        verbose_name_plural = "Genres"
-
-
 class Actor(models.Model):
     name = models.CharField("Name", max_length=150)
     age = models.PositiveIntegerField("Age", default=0)
@@ -46,12 +34,12 @@ class Actor(models.Model):
 class Movie(models.Model):
     title = models.CharField("Name", max_length=100)
     description = models.CharField("Description", max_length=300)
+    genre = models.CharField(max_length=100, default="genre")
     imageURL = models.ImageField("Poster", upload_to="movies/")
     date_of_release = models.DateField("release date", default=date.today)
-    producers = models.ManyToManyField(Actor, verbose_name="producer", related_name="film_director")
     actors = models.ManyToManyField(Actor, verbose_name="actor", related_name="film_actor")
-    genres = models.ManyToManyField(Genre, verbose_name="Genres")
     category = models.ForeignKey(Category, verbose_name="Category", on_delete=models.SET_NULL, null=True)
+    price = models.PositiveIntegerField(default=100)
     url = models.SlugField(max_length=150, unique=True)
 
     def __str__(self):
@@ -74,37 +62,9 @@ class Member(models.Model):
         return self.member_name
 
 
-class MoviePictures(models.Model):
-    title = models.CharField("Title", max_length=200)
-    image = models.ImageField("Pictures", upload_to="movie_shots/")
-    movie = models.ForeignKey(Movie, verbose_name="movie", on_delete=models.CASCADE) #если удалить фильм, то за ним и все изображения
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = "Movie picture"
-        verbose_name_plural = "Movie pictures"
-
-
-class StarRate(models.Model):
-    amount = models.PositiveSmallIntegerField("Amount", default=0)
-
-    def __str__(self):
-        return self.amount
-
-    class Meta:
-        verbose_name = "Star"
-        verbose_name_plural = "Stars"
-
-
-class MovieRating(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="movie")
-    rate = models.ForeignKey(StarRate, on_delete=models.CASCADE, verbose_name="rate")
-
-    def __str__(self):
-        return f"{self.rate} - {self.movie}"
-
-    class Meta:
-        verbose_name = "rating"
+class MovieRental(models.Model):
+    member_id = models.ForeignKey(Member, on_delete=models.CASCADE, verbose_name="Member Name")
+    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE, verbose_name="Movie Name")
+    rent_date = models.DateTimeField(auto_now_add=True)
+    return_date = models.DateTimeField()
 

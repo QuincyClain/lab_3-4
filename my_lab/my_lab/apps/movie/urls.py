@@ -3,5 +3,8 @@ from my_lab import settings
 from . import views
 
 urlpatterns = [
-    path("", views.MoviesView.as_view())
+    path("", views.RentView.as_view()),
+    path("movies/", views.MoviesView.as_view()),
+    path("movies/details/<int:id>/", views.MovieDetailView.as_view()),
+    path("members/", views.MembersView.as_view()),
 ]
