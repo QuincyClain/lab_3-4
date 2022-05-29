@@ -68,3 +68,19 @@ class MovieRental(models.Model):
     rent_date = models.DateTimeField(auto_now_add=True)
     return_date = models.DateTimeField()
 
+
+class Producer(models.Model):
+    producer_name = models.CharField(max_length=100, verbose_name="Name")
+    age = models.PositiveIntegerField("Age", default=0)
+    imageURL = models.ImageField("Image", upload_to="producers/")
+    Biography = models.TextField("Bio")
+
+    def __str__(self):
+        return self.producer_name
+
+    class Meta:
+        verbose_name = "Producer"
+        verbose_name_plural = "Producers"
+
+
+
