@@ -1,0 +1,51 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    <title>Actors info</title>
+{% endblock title %}
+
+{% block content %}
+<a href="/actor/create/" class="btn btn-outline-success mb-3" style="float:right">Add new actor</a>
+    <div>
+        <h1 style="margin-left:30px">Actors <span class="badge bg-dark">Information</span></h1>
+        <div class="col-md-9 offset-md-1">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="bg-dark" style="color: white;">
+                        <th scope="col">Profile picture</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Biography</th>
+                        <th>Management</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if actor_list %}
+                        {% for actor in actor_list %}
+                            <tr>
+                                <td class="align-middle">
+                                    <img class="rounded-circle" src="{{ actor.imageURL.url }}" alt="{{actor.name}}" style="max-width:150px"/>
+                                </td>
+                                <td class="align-middle">
+                                    {{ actor.name }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ actor.age }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ actor.description }}
+                                </td>
+                                <td class="align-middle">
+                                    <div class="row" style="margin-right:5px">
+                                        <a href="/actor/update/{{actor.id}}" class="btn btn-primary" role="button" aria-pressed="true">Edit</a>
+                                        <a href="/actor/delete/{{actor.id}}" class="btn btn-danger" role="button" aria-pressed="true" style="margin-top:10px">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

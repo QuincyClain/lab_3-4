@@ -14,7 +14,7 @@
         {% block style %}
         {% endblock %}
     </head>
-    <body>
+    <body style="background-color:#fae2bf">
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
                 <a class="navbar-brand" href="/" style="padding-left: 15px;">Home</a>
@@ -35,6 +35,9 @@
                         </li>
                         <li class="nav-item active">
                           <a class="nav-link" href="/member/rental">Movies Rented</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/actors/">Actors</a>
                         </li>
                       </ul>
                       <form class="d-flex input-group w-auto" action="{% url 'movie_views' %}">

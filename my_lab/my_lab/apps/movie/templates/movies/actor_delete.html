@@ -1,0 +1,26 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    {% if actor %}
+        <title>Delete {{actor.name}}</title>
+    {% else %}
+        <title>Delete Actor</title>
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        {% if actor %}
+            <h1>Delete <span class="badge bg-dark">{{actor.name}}</span></h1>
+            <p>Are you sure that you to delete this actor?</p>
+            <form method="POST", action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div>
+                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                </div>
+            </form>
+        {% else %}
+            <h1>Actor not found</h1>
+        {% endif %}
+    </div>
+{% endblock content %}

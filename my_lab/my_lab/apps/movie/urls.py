@@ -15,4 +15,8 @@ urlpatterns = [
     path("member/update/<int:id>/", views.MemberUpdateView.as_view()),
     path("member/delete/<int:id>/", views.MemberDeleteView.as_view()),
     path("member/create/", views.MemberCreateView.as_view()),
+    path("actors/", views.ActorView.as_view()),
+    path("actor/create/", views.ActorCreateView.as_view()),
+    path("actor/delete/<int:id>/", views.ActorDeleteView.as_view()),
+    path("actor/update/<int:id>/", views.ActorUpdateView.as_view()),
 ]

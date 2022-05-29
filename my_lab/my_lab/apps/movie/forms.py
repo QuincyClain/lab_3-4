@@ -118,3 +118,30 @@ class MemberForm(forms.ModelForm):
         if age < 0:
             raise ValidationError("Wrong Age")
         return age
+
+
+class ActorForm(forms.ModelForm):
+
+    name = forms.CharField(max_length=100)
+    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    imageURL = forms.ImageField()
+    description = forms.CharField(widget=forms.Textarea, max_length=300)
+
+    class Meta:
+        model = models.Actor
+        fields = ['name', 'age', 'imageURL', 'description']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
+    def clean_age(self):
+        age = self.cleaned_data["age"]
+        if age < 0:
+            raise ValidationError("Wrong Age")
+        return age
+
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+        if not member_accepted_chars.fullmatch(name):
+            raise ValidationError("Please enter a correct actor name")
+        return name.strip().title()

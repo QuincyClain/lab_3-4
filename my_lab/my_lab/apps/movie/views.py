@@ -3,7 +3,7 @@ from django.db import models
 from django.shortcuts import redirect
 from django.views.generic.base import View
 from django.shortcuts import render
-from .models import Movie, Member
+from .models import Movie, Member, Actor
 from . import forms
 from django.db.models import Q
 
@@ -20,6 +20,13 @@ def get_member_by_id(id):
     try:
         member = Member.objects.get(id=id)
         return member
+    except:
+        return None
+
+def get_actor_by_id(id):
+    try:
+        actor = Actor.objects.get(id=id)
+        return actor
     except:
         return None
 
@@ -159,4 +166,49 @@ class MemberCreateView(View):
             form.save()
             data = {"strong": f"Member with name {name.title()} created", "simple": "you can now start renting movies"}
             return render(request, 'movies/movie_creation_success.html', {"data": data})
-        return render(request, 'movies/movie_creation_success.html', {"form": form})
+        return render(request, 'movies/member_create.html', {"form": form})
+
+
+class ActorView(View):
+    def get(self, request):
+        actors = Actor.objects.all()
+        return render(request, 'movies/actor_index.html', {"actor_list": actors})
+
+
+class ActorCreateView(View):
+    def get(self, request):
+        form = forms.ActorForm()
+        return render(request, 'movies/actor_create.html', {'form': form})
+
+    def post(self, request):
+        form = forms.ActorForm(request.POST, request.FILES)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            form.save()
+            data = {"strong": f"Actor with name {name.title()} created"}
+            return render(request, 'movies/movie_creation_success.html', {'data': data})
+        return render(request, 'movies/actor_create.html', {'form': form})
+
+
+class ActorDeleteView(View):
+    def get(self, request, id):
+        return render(request, 'movies/actor_delete.html', {'actor': get_actor_by_id(id)})
+
+    def post(self, request, id):
+        actor = Actor.objects.get(id=id)
+        actor.delete()
+        return redirect('/actors/')
+
+
+class ActorUpdateView(View):
+    def get(self, request, id):
+        form = forms.ActorForm()
+        return render(request, 'movies/actor_update.html', {'actor': get_actor_by_id(id), 'form': form})
+
+    def post(self, request, id):
+        form = forms.ActorForm(request.POST, instance=get_actor_by_id(id))
+        if form.is_valid():
+            form.save()
+            return redirect('/actors/')
+
+
