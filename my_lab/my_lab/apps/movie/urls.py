@@ -4,9 +4,15 @@ from . import views
 
 urlpatterns = [
     path("", views.RentView.as_view()),
-    path("movies/", views.MoviesView.as_view()),
+    path("movies/", views.MoviesView.as_view(), name="movie_views"),
     path("movies/details/<int:id>/", views.MovieDetailView.as_view()),
     path("members/", views.MembersView.as_view()),
     path("rent/", views.MovieRentalView.as_view()),
     path("member/rental", views.MemberRentalInfoView.as_view()),
+    path("movie/create/", views.MovieCreateView.as_view()),
+    path("movie/update/<int:id>/", views.MovieUpdateView.as_view()),
+    path("movie/delete/<int:id>/", views.MovieDeleteView.as_view()),
+    path("member/update/<int:id>/", views.MemberUpdateView.as_view()),
+    path("member/delete/<int:id>/", views.MemberDeleteView.as_view()),
+    path("member/create/", views.MemberCreateView.as_view()),
 ]

@@ -5,6 +5,7 @@ from django.views.generic.base import View
 from django.shortcuts import render
 from .models import Movie, Member
 from . import forms
+from django.db.models import Q
 
 
 def get_movie_by_id(id):
@@ -13,6 +14,7 @@ def get_movie_by_id(id):
         return movie
     except:
         return None
+
 
 def get_member_by_id(id):
     try:
@@ -24,7 +26,11 @@ def get_member_by_id(id):
 
 class MoviesView(View):
     def get(self, request):
-        movies = Movie.objects.all()
+        search_query = request.GET.get('search', '')
+        if search_query:
+            movies = Movie.objects.filter(Q(title__icontains=search_query))
+        else:
+            movies = Movie.objects.all()
         return render(request, "movies/movie_index.html", {"movie_list": movies})
 
 
@@ -79,3 +85,78 @@ class MemberRentalInfoView(View):
         members = Member.objects.all()
         return render(request, 'movies/member_rental_info.html', {"members": members, "data": None})
 
+
+class MovieCreateView(View):
+    def get(self, request):
+        form = forms.MovieForm()
+        return render(request, 'movies/movie_create.html', {"form": form})
+
+    def post(self, request):
+        if request.method == "POST":
+            form = forms.MovieForm(request.POST, request.FILES)
+            if form.is_valid():
+                name = form.cleaned_data['title']
+                form.imageURL = form.cleaned_data
+                form.save()
+                data = {"strong": f"Movie with name {name.title()} created", "simple": "this movie can now be rented"}
+                return render(request, 'movies/movie_creation_success.html', {"data": data})
+            return render(request, 'movies/movie_create.html', {"form": form})
+
+
+class MovieUpdateView(View):
+    def get(self, request, id):
+        form = forms.MovieForm()
+        return render(request, 'movies/movie_update.html', {'movie': get_movie_by_id(id), 'form': form})
+
+    def post(self, request, id):
+        form = forms.MovieForm(request.POST, instance=get_movie_by_id(id))
+        if form.is_valid():
+            form.save()
+            return redirect('/movies/')
+
+
+class MovieDeleteView(View):
+    def get(self, request, id):
+        return render(request, 'movies/movie_delete.html', {'movie': get_movie_by_id(id)})
+
+    def post(self, request, id):
+        movie = Movie.objects.get(id=id)
+        movie.delete()
+        return redirect('/movies/')
+
+
+class MemberUpdateView(View):
+    def get(self, request, id):
+        form = forms.MemberForm()
+        return render(request, 'movies/member_update.html', {'member': get_member_by_id(id), 'form': form})
+
+    def post(self, request, id):
+        form = forms.MemberForm(request.POST or None, instance=get_member_by_id(id))
+        if form.is_valid():
+            form.save()
+            return redirect('/members/')
+
+
+class MemberDeleteView(View):
+    def get(self, request, id):
+        return render(request, 'movies/member_delete.html', {'member': get_member_by_id(id)})
+
+    def post(self, request, id):
+        member = Member.objects.get(id=id)
+        member.delete()
+        return redirect('/members/')
+
+
+class MemberCreateView(View):
+    def get(self, request):
+        form = forms.MemberForm()
+        return render(request, 'movies/member_create.html', {'form': form})
+
+    def post(self, request):
+        form = forms.MemberForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['member_name']
+            form.save()
+            data = {"strong": f"Member with name {name.title()} created", "simple": "you can now start renting movies"}
+            return render(request, 'movies/movie_creation_success.html', {"data": data})
+        return render(request, 'movies/movie_creation_success.html', {"form": form})

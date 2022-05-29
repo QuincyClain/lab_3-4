@@ -1,0 +1,27 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    {% if movie %}
+        <title>Update {{movie.title}}</title>
+    {% else %}
+        <title>Update Movie</title>
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        {% if movie %}
+            <h1>Update <span class="badge bg-dark">{{movie.title}}</span></h1>
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class = "text-center mb-3">
+                    <button type="submit" class="btn btn-dark">Update</button>
+                </div>
+            </form>
+        {% else %}
+            <h1>No Movie Found</h1>
+        {% endif %}
+
+    </div>
+{% endblock content %}

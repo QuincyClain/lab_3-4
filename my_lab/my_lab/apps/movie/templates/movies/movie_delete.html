@@ -1,0 +1,26 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    {% if movie %}
+        <title>Delete {{movie.title}}</title>
+    {% else %}
+        <title>Delete Movie</title>
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        {% if movie %}
+            <h1>Delete <span class="badge bg-dark">{{movie.title}}</span></h1>
+            <p>Are you sure that you to delete this movie?</p>
+            <form method="POST", action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div>
+                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                </div>
+            </form>
+        {% else %}
+            <h1>No Movie Found</h1>
+        {% endif %}
+    </div>
+{% endblock content %}

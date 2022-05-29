@@ -9,6 +9,7 @@
 {% endblock title %}
 
 {% block content %}
+<a href="/movie/create/" class="btn btn-outline-success mb-3" style="float:right">Add new movie</a>
 <div class="row">
     {% for movie in movie_list %}
         <div class="col-md-4 col-xs-6 border-primary mb-3">
@@ -31,9 +32,7 @@
                         <div class="card-body">
                             <p class="card-text"><b>Description: </b>{{movie.description}}</p>
                             <p class="card-text"><b>Genre:</b>
-                                {% for genre in movie.genres.all %}
-                                    <b>{{movie.name}}</b>
-                                {% endfor %}
+                                {{ movie.genre }}
                             </p>
                             <p class="card=text"><b>Date of release: </b>{{movie.date_of_release}}</p>
                             <p class="card-text ">
@@ -41,9 +40,11 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right nav-link" href="details/{{movie.id}}" aria-pressed="true"><i class="bi bi-eye-fill"></i> Show Details</a>
+                        <div class="card-footer">
+                            <p class="card-text container">
+                                <a class="btn btn-outline-primary float-center" href="details/{{movie.id}}" aria-pressed="true"><i class="bi bi-eye-fill"></i> Show Details</a>
+                                <a class="btn btn-outline-success" href="/movie/update/{{movie.id}}" role="button" aria-pressed="true">Edit</a>
+                                <a class="btn btn-outline-danger" href="/movie/delete/{{movie.id}}" role="button" aria-pressed="true">Delete</a>
                             </p>
                         </div>
                     </div>

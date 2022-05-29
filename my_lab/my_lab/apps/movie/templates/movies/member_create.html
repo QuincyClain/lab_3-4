@@ -1,0 +1,18 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    <title>Create New Member</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h1>Create <span class="badge bg-dark">Member</span></h1>
+        {% if form %}
+            <form method="POST" action="">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Create</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock content %}

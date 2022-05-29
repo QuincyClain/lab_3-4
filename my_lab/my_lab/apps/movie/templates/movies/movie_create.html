@@ -1,0 +1,20 @@
+{% extends "movies/base.html" %}
+
+{% block title %}
+    <title>Create New Movie</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h1>Create <span class="badge bg-dark">Movie</span></h1>
+        {% if form %}
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="text-center margin-bottom: 5px">
+                    <button type="submit" class="btn btn-dark">Create</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock content %}
