@@ -9,7 +9,12 @@
 {% endblock title %}
 
 {% block content %}
-<a href="/movie/create/" class="btn btn-outline-success mb-3" style="float:right">Add new movie</a>
+<div style="margin-right:20px">
+    {% if request.user.is_authenticated %}
+    <a href="/movie/create/" class="btn btn-outline-success mb-3" style="float:right">Add new movie</a>
+    {% endif %}
+</div>
+
 <div class="row">
     {% for movie in movie_list %}
         <div class="col-md-4 col-xs-6 border-primary mb-3">
@@ -43,8 +48,10 @@
                         <div class="card-footer">
                             <p class="card-text container">
                                 <a class="btn btn-outline-primary float-center" href="details/{{movie.id}}" aria-pressed="true"><i class="bi bi-eye-fill"></i> Show Details</a>
+                                {% if request.user.is_authenticated %}
                                 <a class="btn btn-outline-success" href="/movie/update/{{movie.id}}" role="button" aria-pressed="true">Edit</a>
                                 <a class="btn btn-outline-danger" href="/movie/delete/{{movie.id}}" role="button" aria-pressed="true">Delete</a>
+                                {% endif %}
                             </p>
                         </div>
                     </div>

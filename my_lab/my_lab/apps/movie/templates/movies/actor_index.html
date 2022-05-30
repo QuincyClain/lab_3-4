@@ -5,7 +5,12 @@
 {% endblock title %}
 
 {% block content %}
-<a href="/actor/create/" class="btn btn-outline-success mb-3" style="float:right">Add new actor</a>
+{% if request.user.is_authenticated %}
+<div style="margin-right:20px">
+    <a href="/actor/create/" class="btn btn-outline-success mb-3" style="float:right">Add new actor</a>
+</div>
+{% endif %}
+
     <div>
         <h1 style="margin-left:30px">Actors <span class="badge bg-dark">Information</span></h1>
         <div class="col-md-9 offset-md-1">
@@ -16,7 +21,9 @@
                         <th scope="col">Name</th>
                         <th scope="col">Age</th>
                         <th scope="col">Biography</th>
+                        {% if request.user.is_authenticated %}
                         <th>Management</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -35,12 +42,14 @@
                                 <td class="align-middle">
                                     {{ actor.description }}
                                 </td>
+                                {% if request.user.is_authenticated %}
                                 <td class="align-middle">
                                     <div class="row" style="margin-right:5px">
                                         <a href="/actor/update/{{actor.id}}" class="btn btn-primary" role="button" aria-pressed="true">Edit</a>
                                         <a href="/actor/delete/{{actor.id}}" class="btn btn-danger" role="button" aria-pressed="true" style="margin-top:10px">Delete</a>
                                     </div>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     {% endif %}

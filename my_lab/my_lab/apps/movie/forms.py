@@ -2,6 +2,8 @@ from django import forms
 from datetime import datetime
 from django.core.exceptions import ValidationError
 from . import models
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 import re
 
 movie_accepted_chars = re.compile("^[a-zA-Z0-9\s]*$")
@@ -145,3 +147,9 @@ class ActorForm(forms.ModelForm):
         if not member_accepted_chars.fullmatch(name):
             raise ValidationError("Please enter a correct actor name")
         return name.strip().title()
+
+
+class UserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']

@@ -1,11 +1,15 @@
-from django.conf import settings
-from django.db import models
 from django.shortcuts import redirect
 from django.views.generic.base import View
 from django.shortcuts import render
 from .models import Movie, Member, Actor
 from . import forms
+from .forms import UserForm
 from django.db.models import Q
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 
 def get_movie_by_id(id):
@@ -58,6 +62,7 @@ class MembersView(View):
         return render(request, 'movies/member_index.html', {"data": members})
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class MovieRentalView(View):
     def get(self, request):
         if request.method == "GET":
@@ -93,6 +98,7 @@ class MemberRentalInfoView(View):
         return render(request, 'movies/member_rental_info.html', {"members": members, "data": None})
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class MovieCreateView(View):
     def get(self, request):
         form = forms.MovieForm()
@@ -110,6 +116,7 @@ class MovieCreateView(View):
             return render(request, 'movies/movie_create.html', {"form": form})
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class MovieUpdateView(View):
     def get(self, request, id):
         form = forms.MovieForm()
@@ -122,6 +129,7 @@ class MovieUpdateView(View):
             return redirect('/movies/')
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class MovieDeleteView(View):
     def get(self, request, id):
         return render(request, 'movies/movie_delete.html', {'movie': get_movie_by_id(id)})
@@ -132,6 +140,7 @@ class MovieDeleteView(View):
         return redirect('/movies/')
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class MemberUpdateView(View):
     def get(self, request, id):
         form = forms.MemberForm()
@@ -144,6 +153,7 @@ class MemberUpdateView(View):
             return redirect('/members/')
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class MemberDeleteView(View):
     def get(self, request, id):
         return render(request, 'movies/member_delete.html', {'member': get_member_by_id(id)})
@@ -154,6 +164,7 @@ class MemberDeleteView(View):
         return redirect('/members/')
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class MemberCreateView(View):
     def get(self, request):
         form = forms.MemberForm()
@@ -175,6 +186,7 @@ class ActorView(View):
         return render(request, 'movies/actor_index.html', {"actor_list": actors})
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class ActorCreateView(View):
     def get(self, request):
         form = forms.ActorForm()
@@ -190,6 +202,7 @@ class ActorCreateView(View):
         return render(request, 'movies/actor_create.html', {'form': form})
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class ActorDeleteView(View):
     def get(self, request, id):
         return render(request, 'movies/actor_delete.html', {'actor': get_actor_by_id(id)})
@@ -200,6 +213,7 @@ class ActorDeleteView(View):
         return redirect('/actors/')
 
 
+@method_decorator(login_required(login_url='login'), name='get')
 class ActorUpdateView(View):
     def get(self, request, id):
         form = forms.ActorForm()
@@ -210,5 +224,53 @@ class ActorUpdateView(View):
         if form.is_valid():
             form.save()
             return redirect('/actors/')
+
+
+class RegisterView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
+        else:
+            form = UserForm()
+            context = {'form': form}
+            return render(request, 'movies/register.html', context)
+
+    def post(self, request):
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, 'Account was successfully created for ' + username)
+
+            return redirect('login')
+
+
+class LoginView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
+        else:
+            context = {}
+            return render(request, 'movies/login.html', context)
+
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        context = {}
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.info(request, 'username or password is wrong')
+            return render(request, 'movies/login.html', context)
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('home')
 
 

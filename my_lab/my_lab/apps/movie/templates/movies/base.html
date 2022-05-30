@@ -24,15 +24,17 @@
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" id="navbarTogglerDemo02">
                       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li class="nav-item active">
-                          <a class="nav-link" href="/members/">View Members</a>
-                        </li>
+                            <li class="nav-item active">
+                              <a class="nav-link" href="/members/">View Members</a>
+                            </li>
                         <li class="nav-item active">
                           <a class="nav-link" href="/movies/">View Movies</a>
                         </li>
-                        <li class="nav-item active">
-                          <a class="nav-link" href="/rent/">Rent Movies</a>
-                        </li>
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item active">
+                              <a class="nav-link" href="/rent/">Rent Movies</a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item active">
                           <a class="nav-link" href="/member/rental">Movies Rented</a>
                         </li>
@@ -40,10 +42,30 @@
                             <a class="nav-link" href="/actors/">Actors</a>
                         </li>
                       </ul>
-                      <form class="d-flex input-group w-auto" action="{% url 'movie_views' %}">
+                      <form class="d-flex input-group w-auto float-right" action="{% url 'movie_views' %}" style="margin-left:650px">
                           <input class="form-control rounded" type="search" placeholder="Search for a movie.." aria-label="Search" aria-describedby="search-addon" name="search">
                           <button class="btn btn-outline-success" type="submit">Search</button>
                       </form>
+                        {% if not request.user.is_authenticated %}
+                           <li style="margin-left:230px">
+                                <a class="nav-link btn btn-outline-success my-2 my-sm-0" href="/login/">
+                                    <i class="bi bi-box-arrow-in-right"></i>Log in
+                                </a>
+                           </li>
+                           <li style="margin-right:20px">
+                               <a class="nav-link btn btn-outline-primary my-2 my-sm-0" href="/register/">
+                                   <i class="bi bi-person-plus"></i>Register
+                               </a>
+                           </li>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                            <li style="margin-left:150px">
+                                <span style="color:white">Hello, {{request.user}}</span>
+                            </li>
+                            <li style="margin-right:10px">
+                               <a class="nav-link btn btn-outline-danger my-2 my-sm-0" href="{% url 'logout' %}">Log out</a>
+                            </li>
+                        {% endif %}
                 </div>
             </nav>
         </header>
