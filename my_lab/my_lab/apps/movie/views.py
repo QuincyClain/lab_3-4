@@ -1,10 +1,11 @@
+import asyncio
+from .async_functionality import *
 from django.shortcuts import redirect
 from django.views.generic.base import View
 from django.shortcuts import render
 from .models import Movie, Member, Actor
 from . import forms
 from .forms import UserForm
-from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -15,63 +16,39 @@ import logging
 logger = logging.getLogger('main')
 
 
-def get_movie_by_id(id):
-    try:
-        movie = Movie.objects.get(id=id)
-        return movie
-    except:
-        return None
-
-
-def get_member_by_id(id):
-    try:
-        member = Member.objects.get(id=id)
-        return member
-    except:
-        return None
-
-def get_actor_by_id(id):
-    try:
-        actor = Actor.objects.get(id=id)
-        return actor
-    except:
-        return None
-
-
 class MoviesView(View):
     def get(self, request):
         logger.info('check MoviesView')
         search_query = request.GET.get('search', '')
         if search_query:
-            movies = Movie.objects.filter(Q(title__icontains=search_query))
+            movies = asyncio.run(get_filtered_movies(search_query))
         else:
-            movies = Movie.objects.all()
+            movies = asyncio.run(get_all_movies())
         return render(request, "movies/movie_index.html", {"movie_list": movies})
 
 
 class RentView(View):
     def get(self, request):
         logger.info('check RentView')
-        movies = Movie.objects.all()
+        movies = asyncio.run(get_all_movies())
         return render(request, 'movies/rent_index.html', {"data": movies})
 
 
 class MovieDetailView(View):
     def get(self, request, id):
         logger.info('check MovieDetailView')
-        return render(request, "movies/details.html", {"movie": get_movie_by_id(id)})
+        return render(request, "movies/details.html", {"movie": asyncio.run(get_movie_by_id(id))})
 
 
 class MembersView(View):
     def get(self, request):
         logger.info('check MembersView')
-        members = Member.objects.all()
+        members = asyncio.run(get_all_members())
         return render(request, 'movies/member_index.html', {"data": members})
 
 
 @method_decorator(login_required(login_url='login'), name='get')
 class MovieRentalView(View):
-
     def get(self, request):
         logger.info('check MovieRentalView')
         if request.method == "GET":
@@ -91,22 +68,29 @@ class MovieRentalView(View):
         return render(request, 'movies/rent_movie.html', {"rent_form": rent_form})
 
 
+class MoveRentalSuccessView(View):
+    def get(self, request):
+        if request.method == "GET":
+            success = {"strong": "Have a nice day bro!"}
+            return render(request, "movies/order_success.html", {"success": success})
+
+
 class MemberRentalInfoView(View):
     def get(self, request):
         logger.info('check MovieRentalInfoView')
-        members = Member.objects.all()
+        members = asyncio.run(get_all_members())
         return render(request, 'movies/member_rental_info.html', {"members": members, "data": None})
 
     def post(self, request):
         logger.info('check MovieRentalInfoView')
-        members = Member.objects.all()
+        members = asyncio.run(get_all_members())
         if request.method == "POST":
             member_id = int(request.POST.get("member"))
             if member_id:
                 selected_member = members.get(id=member_id)
                 return render(request, 'movies/member_rental_info.html',
                               {"members": members, "data": selected_member, "selected_value": member_id})
-        members = Member.objects.all()
+        members = asyncio.run(get_all_members())
         return render(request, 'movies/member_rental_info.html', {"members": members, "data": None})
 
 
@@ -135,11 +119,11 @@ class MovieUpdateView(View):
     def get(self, request, id):
         logger.info('check MovieUpdateView')
         form = forms.MovieForm()
-        return render(request, 'movies/movie_update.html', {'movie': get_movie_by_id(id), 'form': form})
+        return render(request, 'movies/movie_update.html', {'movie': asyncio.run(get_movie_by_id(id)), 'form': form})
 
     def post(self, request, id):
         logger.info('check MovieUpdateView')
-        form = forms.MovieForm(request.POST, instance=get_movie_by_id(id))
+        form = forms.MovieForm(request.POST, instance=asyncio.run(get_movie_by_id(id)))
         if form.is_valid():
             form.save()
             return redirect('/movies/')
@@ -149,7 +133,7 @@ class MovieUpdateView(View):
 class MovieDeleteView(View):
     def get(self, request, id):
         logger.info('check MovieDeleteView')
-        return render(request, 'movies/movie_delete.html', {'movie': get_movie_by_id(id)})
+        return render(request, 'movies/movie_delete.html', {'movie': asyncio.run(get_movie_by_id(id))})
 
     def post(self, request, id):
         logger.info('check MovieDeleteView')
@@ -163,11 +147,11 @@ class MemberUpdateView(View):
     def get(self, request, id):
         logger.info('check MemberUpdateView')
         form = forms.MemberForm()
-        return render(request, 'movies/member_update.html', {'member': get_member_by_id(id), 'form': form})
+        return render(request, 'movies/member_update.html', {'member': asyncio.run(get_member_by_id(id)), 'form': form})
 
     def post(self, request, id):
         logger.info('check MemberUpdateView')
-        form = forms.MemberForm(request.POST or None, instance=get_member_by_id(id))
+        form = forms.MemberForm(request.POST or None, instance=asyncio.run(get_member_by_id(id)))
         if form.is_valid():
             form.save()
             return redirect('/members/')
@@ -177,7 +161,7 @@ class MemberUpdateView(View):
 class MemberDeleteView(View):
     def get(self, request, id):
         logger.info('check MemberDeleteView')
-        return render(request, 'movies/member_delete.html', {'member': get_member_by_id(id)})
+        return render(request, 'movies/member_delete.html', {'member': asyncio.run(get_member_by_id(id))})
 
     def post(self, request, id):
         logger.info('check MemberDeleteView')
@@ -207,7 +191,7 @@ class MemberCreateView(View):
 class ActorView(View):
     def get(self, request):
         logger.info('check ActorView')
-        actors = Actor.objects.all()
+        actors = asyncio.run(get_all_actors())
         return render(request, 'movies/actor_index.html', {"actor_list": actors})
 
 
@@ -233,7 +217,7 @@ class ActorCreateView(View):
 class ActorDeleteView(View):
     def get(self, request, id):
         logger.info('check ActorDeleteView')
-        return render(request, 'movies/actor_delete.html', {'actor': get_actor_by_id(id)})
+        return render(request, 'movies/actor_delete.html', {'actor': asyncio.run(get_actor_by_id(id))})
 
     def post(self, request, id):
         logger.info('check ActorDeleteView')
@@ -247,11 +231,11 @@ class ActorUpdateView(View):
     def get(self, request, id):
         logger.info('check ActorUpdateView')
         form = forms.ActorForm()
-        return render(request, 'movies/actor_update.html', {'actor': get_actor_by_id(id), 'form': form})
+        return render(request, 'movies/actor_update.html', {'actor': asyncio.run(get_actor_by_id(id)), 'form': form})
 
     def post(self, request, id):
         logger.info('check ActorUpdateView')
-        form = forms.ActorForm(request.POST, instance=get_actor_by_id(id))
+        form = forms.ActorForm(request.POST, instance=asyncio.run(get_actor_by_id(id)))
         if form.is_valid():
             form.save()
             return redirect('/actors/')

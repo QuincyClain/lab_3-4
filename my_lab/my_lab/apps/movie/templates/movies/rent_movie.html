@@ -11,7 +11,7 @@
             <form method="POST" action="">
                 {% csrf_token %}
                 {{ rent_form.as_p }}
-                <button type="submit" class="btn btn-dark">Buy ticket</button>
+                <button type="submit" class="btn btn-dark">Buy Ticket</button>
             </form>
         {% endif %}
     </div>
@@ -21,12 +21,10 @@
     <script>
         let _total = 100;
         paypal.Button.render({
-            //Configure environment
             env: 'sandbox',
             client: {
                 sandbox: 'ATUgC5M-KYAt71k7-PkJwK9zR11XsV0KaAp6MTL_rhNMPep4SDM22-2_sO3kZOTxJv9zjdtgxb455G8y'
             },
-            //Customize button
             locale: 'en_US',
             style: {
                 size: 'small',
@@ -34,7 +32,6 @@
                 shape: 'pill'
             },
             commit: true,
-            //Set up a payment
             payment: function (data, actions) {
                 return actions.payment.create({
                     transactions: [{
@@ -45,10 +42,9 @@
                     }]
                 });
             },
-            //Execute the payment
             onAuthorize: function (data, actions) {
                 return actions.payment.execute().then(function () {
-                    var url = '#';
+                    var url = 'success';
                     window.location.href = url;
                 });
             }
