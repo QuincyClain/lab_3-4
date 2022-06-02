@@ -17,6 +17,11 @@ logger = logging.getLogger('main')
 
 
 class MoviesView(View):
+    context_object_name = 'movie_list'
+
+    def get_queryset(self):
+        return Movie.objects.all()
+
     def get(self, request):
         logger.info('check MoviesView')
         search_query = request.GET.get('search', '')
@@ -127,6 +132,8 @@ class MovieUpdateView(View):
         if form.is_valid():
             form.save()
             return redirect('/movies/')
+        else:
+            return request(305)
 
 
 @method_decorator(login_required(login_url='login'), name='get')
@@ -189,6 +196,11 @@ class MemberCreateView(View):
 
 
 class ActorView(View):
+    context_object_name = 'actor_list'
+
+    def get_queryset(self):
+        return Actor.objects.all()
+
     def get(self, request):
         logger.info('check ActorView')
         actors = asyncio.run(get_all_actors())

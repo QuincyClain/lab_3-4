@@ -56,6 +56,10 @@ class MovieForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'})
         }
 
+    def __init__(self, *args, **kwargs):
+        super(MovieForm, self).__init__(*args, **kwargs)
+        self.fields['imageURL'].required = False
+
     def clean_price(self):
         price = self.cleaned_data["price"]
         if price < 0:
@@ -135,6 +139,10 @@ class ActorForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super(ActorForm, self).__init__(*args, **kwargs)
+        self.fields['imageURL'].required = False
 
     def clean_age(self):
         age = self.cleaned_data["age"]
