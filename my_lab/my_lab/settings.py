@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import sys, os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +32,7 @@ SECRET_KEY = 'django-insecure-##3$))$!w=#h5j93tuk4u!$kna0ky)j9csj#bs8kq&8h9zq#za
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +57,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+cloudinary.config(
+  cloud_name="djangoapp",
+  api_key="258142692692789",
+  api_secret="G2ddwh2dEvTjNmaH8Vl_ckQF0ls"
+)
 
 LOGGING = {
     'version': 1,
@@ -115,7 +126,7 @@ DATABASES = {
         'NAME': 'movies',
         'USER': 'quincyclain',
         'PASSWORD': 'quincyclain',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '',
     }
 }

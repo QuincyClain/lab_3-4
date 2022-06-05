@@ -195,20 +195,3 @@ class ViewsTestCase(TestCase):
         )
         response = self.client.get(reverse('actors_view'))
         self.assertQuerysetEqual(response.context['actor_list'], [self.actor])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

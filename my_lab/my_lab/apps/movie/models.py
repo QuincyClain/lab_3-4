@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.utils import timezone
 from datetime import date
 
@@ -20,7 +21,7 @@ class Category(models.Model):
 class Actor(models.Model):
     name = models.CharField("Name", max_length=150)
     age = models.PositiveIntegerField("Age", default=0)
-    imageURL = models.ImageField("Image", upload_to="actors/", null=True, blank=True)
+    imageURL = CloudinaryField("imageURL")
     description = models.TextField("Description")
 
     def __str__(self):
@@ -35,7 +36,7 @@ class Movie(models.Model):
     title = models.CharField("Name", max_length=100)
     description = models.CharField("Description", max_length=300)
     genre = models.CharField(max_length=100, default="genre")
-    imageURL = models.ImageField("Poster", upload_to="movies/", null=True, blank=True)
+    imageURL = CloudinaryField("imageURL", null=True, blank=True)
     date_of_release = models.DateField("release date", default=date.today)
     actors = models.ManyToManyField(Actor, verbose_name="actor", related_name="film_actor")
     price = models.PositiveIntegerField(default=100)

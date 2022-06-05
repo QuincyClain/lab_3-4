@@ -1,6 +1,7 @@
 FROM python:latest
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV PORT=8000
 RUN mkdir /web_django
 WORKDIR /web_django
 COPY requirements.txt /web_django/
