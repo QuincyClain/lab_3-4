@@ -76,10 +76,6 @@ LOGGING = {
     },
 
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'main_format',
-        },
         'file': {
             'class': 'logging.FileHandler',
             'formatter': 'main_format',
@@ -89,7 +85,7 @@ LOGGING = {
 
     'loggers': {
         'main': {
-            'handlers': ['console', 'file'],
+            'handlers': ['file'],
             'level': 'INFO',
             'propagate': True,
         },
